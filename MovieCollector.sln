@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieCollectorX", "MovieCollectorX\MovieCollectorX.csproj", "{C0753345-C77E-49BB-8DDA-226BAC52CC27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieCollector", "MovieCollector\MovieCollector.csproj", "{C750F0A5-51C9-4072-A162-E5E911E5AE78}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C0753345-C77E-49BB-8DDA-226BAC52CC27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0753345-C77E-49BB-8DDA-226BAC52CC27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0753345-C77E-49BB-8DDA-226BAC52CC27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0753345-C77E-49BB-8DDA-226BAC52CC27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C750F0A5-51C9-4072-A162-E5E911E5AE78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C750F0A5-51C9-4072-A162-E5E911E5AE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C750F0A5-51C9-4072-A162-E5E911E5AE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C750F0A5-51C9-4072-A162-E5E911E5AE78}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
