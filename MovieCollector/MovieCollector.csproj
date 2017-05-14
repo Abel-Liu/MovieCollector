@@ -93,6 +93,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\MovieCollectorX\BoxOffice\BoxOffice.cs">
+      <Link>BoxOffice\BoxOffice.cs</Link>
+    </Compile>
+    <Compile Include="..\MovieCollectorX\BoxOffice\BoxOfficeModel.cs">
+      <Link>BoxOffice\BoxOfficeModel.cs</Link>
+    </Compile>
     <Compile Include="..\MovieCollectorX\Lib\BasePipelineSQL.cs">
       <Link>Lib\BasePipelineSQL.cs</Link>
     </Compile>
