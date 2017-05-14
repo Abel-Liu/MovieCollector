@@ -99,11 +99,11 @@
     <Compile Include="..\MovieCollectorX\Lib\PageProcessorWithLog.cs">
       <Link>Lib\PageProcessorWithLog.cs</Link>
     </Compile>
-    <Compile Include="..\MovieCollectorX\Meituan.cs">
-      <Link>Meituan.cs</Link>
+    <Compile Include="..\MovieCollectorX\Meituan\Meituan.cs">
+      <Link>Meituan\Meituan.cs</Link>
     </Compile>
-    <Compile Include="..\MovieCollectorX\MovieModel.cs">
-      <Link>MovieModel.cs</Link>
+    <Compile Include="..\MovieCollectorX\Meituan\MeituanModel.cs">
+      <Link>Meituan\MeituanModel.cs</Link>
     </Compile>
     <Compile Include="..\MovieCollectorX\Program.cs">
       <Link>Program.cs</Link>

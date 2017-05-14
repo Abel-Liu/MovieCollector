@@ -5,8 +5,8 @@ using Dapper.Contrib.Extensions;
 
 namespace MovieCollector
 {
-    [Table("movie_info")]
-    public class MovieModel
+    [Table("meituan")]
+    public class MeituanModel
     {
         [Key]
         public int id { get; set; }

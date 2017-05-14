@@ -40,9 +40,9 @@ namespace MovieCollector
             var result = resultItems.Results["VideoResult"];
             if (result != null)
             {
-                foreach (var m in result as List<MovieModel>)
+                foreach (var m in result as List<MeituanModel>)
                 {
-                    var query = Connection.Query<MovieModel>("select * from movie_info where name=@name",
+                    var query = Connection.Query<MeituanModel>("select * from meituan where name=@name",
                          new { name = m.name });
 
                     if (query.Count() > 0)
@@ -64,7 +64,7 @@ namespace MovieCollector
     {
         protected override void Handle(Page page)
         {
-            List<MovieModel> results = new List<MovieModel>();
+            List<MeituanModel> results = new List<MeituanModel>();
             var items = page.Selectable.SelectList(Selectors.XPath("//div[@id='content']/div/div[contains(@class,'movie-cell')]")).Nodes();
 
             foreach (var item in items)
@@ -82,7 +82,7 @@ namespace MovieCollector
 
                 decimal.TryParse(rateStr, out var rate);
 
-                MovieModel model = new MovieModel()
+                MeituanModel model = new MeituanModel()
                 {
                     name = titlev,
                     detail_url = title.Links().GetValue(),
