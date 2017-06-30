@@ -8,6 +8,9 @@ namespace MovieCollector
     [Table("box_office")]
     public class BoxOfficeModel
     {
+        /// <summary>
+        /// 自增
+        /// </summary>
         [Key]
         public int id { get; set; }
 
@@ -15,7 +18,10 @@ namespace MovieCollector
 
         public string description { get; set; } = string.Empty;
 
-        public decimal box_office { get; set; } = 0;
+        /// <summary>
+        /// 票房(元)
+        /// </summary>
+        public int box_office { get; set; } = 0;
 
         public string img_url { get; set; } = string.Empty;
 

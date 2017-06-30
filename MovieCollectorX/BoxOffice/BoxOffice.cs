@@ -1,24 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Dapper.Contrib.Extensions;
 using DotnetSpider.Core;
-using DotnetSpider.Core.Pipeline;
-using DotnetSpider.Core.Processor;
+using DotnetSpider.Core.Downloader;
 using DotnetSpider.Core.Scheduler;
 using DotnetSpider.Core.Selector;
-using DotnetSpider.Core.Downloader;
-using System.Text;
-using Dapper;
-using Dapper.Contrib.Extensions;
+using MySql.Data.MySqlClient;
+using NLog;
+using System;
+using System.Collections.Generic;
 
 namespace MovieCollector
 {
+    /// <summary>
+    /// 网络票房
+    /// </summary>
     public class BoxOffice
     {
         public static void Run()
         {
             var site = new Site { EncodingName = "UTF-8" };
-            site.AddStartUrl("http://www.BoxOffice.com/dianying/zuixindianying");
+            site.AddStartUrl("http://58921.com/alltime/wangpiao");
 
             Spider spider = Spider.Create(site,
                 new QueueDuplicateRemovedScheduler(),
@@ -27,9 +27,56 @@ namespace MovieCollector
                 .SetDownloader(new HttpClientDownloader())
                 .SetThreadNum(1);
 
-            spider.EmptySleepTime = 3000;
-
+            spider.EmptySleepTime = 60000;
             spider.Run();
+
+            DeleteOldData();
+        }
+
+        static void DeleteOldData()
+        {
+            var sql = @"
+            UPDATE movie.box_office a 
+            SET 
+                creation_time = (SELECT 
+                        mintime
+                    FROM
+                        (SELECT 
+                            name, MIN(creation_time) AS mintime
+                        FROM
+                            movie.box_office
+                        GROUP BY name) r
+                    WHERE
+                        r.name = a.name);
+
+
+            DELETE FROM movie.box_office 
+            WHERE
+                id IN (SELECT 
+                    id
+                FROM
+                    (SELECT 
+                        id
+                    FROM
+                        movie.box_office a
+                    INNER JOIN (SELECT 
+                        name, MAX(id) AS tid
+                    FROM
+                        movie.box_office
+                    GROUP BY name
+                    HAVING COUNT(*) > 1) r ON a.name = r.name
+        
+                    WHERE
+                        a.id <> r.tid) i);";
+
+            using (MySqlConnection conn = new MySqlConnection(Program.Configuration["ConnectionString"]))
+            {
+                conn.Open();
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = sql;
+
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 
@@ -40,22 +87,7 @@ namespace MovieCollector
             var result = resultItems.Results["VideoResult"];
             if (result != null)
             {
-                foreach (var m in result as List<BoxOfficeModel>)
-                {
-                    var query = Connection.Query<BoxOfficeModel>("select * from box_office where name=@name",
-                         new { name = m.name });
-
-                    if (query.Count() > 0)
-                    {
-                        var old = query.First();
-                        m.id = old.id;
-                        m.creation_time = old.creation_time;
-
-                        Connection.Update(m);
-                    }
-                    else
-                        Connection.Insert(m);
-                }
+                Connection.Insert(result as IEnumerable<BoxOfficeModel>);
             }
         }
     }
@@ -65,36 +97,38 @@ namespace MovieCollector
         protected override void Handle(Page page)
         {
             List<BoxOfficeModel> results = new List<BoxOfficeModel>();
-            var items = page.Selectable.SelectList(Selectors.XPath("//div[@id='content']/div/div[contains(@class,'movie-cell')]")).Nodes();
+            var items = page.Selectable.SelectList(Selectors.XPath("//div[@class='table-responsive']/table//tr")).Nodes();
 
             foreach (var item in items)
             {
-                var title = item.Select(Selectors.XPath("./h3[@class='movie-cell__title']/a"));
-                var titlev = title.GetValue();
-
-                if (string.IsNullOrEmpty(titlev))
+                var title = item.Select(Selectors.XPath("./td[2]/a")).GetValue();
+                if (string.IsNullOrEmpty(title))
                     continue;
-
-                var rateStr = item.Select(Selectors.XPath("./div[@class='movie-cell__detail']/p/strong[@class='rates']")).GetValue(true);
-                if (rateStr == null)
-                    rateStr = string.Empty;
-                rateStr = rateStr.Replace("\r", "").Replace("\n", "").Trim();
-
-                decimal.TryParse(rateStr, out var rate);
 
                 BoxOfficeModel model = new BoxOfficeModel()
                 {
-                    name = titlev,
-                    detail_url = title.Links().GetValue(),
-                    img_url = item.Select(Selectors.XPath("./a[@class='movie-cell__cover']/img/@src")).GetValue(),
-
+                    name = title,
+                    detail_url = item.Select(Selectors.XPath("./td[2]/a/@href")).GetValue(),
                 };
+
+                var people = item.Select(Selectors.XPath("./td[5]")).GetValue().HumanToNumber();
+                var price = item.Select(Selectors.XPath("./td[6]")).GetValue().HumanToNumber();
+                if (people.HasValue && price.HasValue)
+                {
+                    model.box_office = (int)(people.Value * price.Value);
+                }
 
                 results.Add(model);
             }
 
             if (results.Count > 0)
                 page.AddResultItem("VideoResult", results);
+
+            var next = page.Selectable.Select(Selectors.XPath("//li[@class='pager_next']/a/@href")).GetValue();
+            if (!string.IsNullOrEmpty(next))
+            {
+                page.AddTargetRequest(next);
+            }
         }
     }
 }

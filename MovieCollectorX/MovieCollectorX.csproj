@@ -18,15 +18,19 @@
   <ItemGroup>
     <PackageReference Include="Dapper.Contrib" Version="1.50.0" />
     <PackageReference Include="DotnetSpider2.Core" Version="1.0.14" />
-    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.2" />
     <PackageReference Include="MySql.Data" Version="7.0.7-m61" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="log4net.config">
+    <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.NETCore.App" Version="1.1.1" />
   </ItemGroup>
 
 </Project>

@@ -1,27 +1,38 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using log4net;
-using log4net.Config;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using Microsoft.Extensions.Configuration;
 
 namespace MovieCollector
 {
     class Program
     {
+        public static IConfigurationRoot Configuration;
+
         static void Main(string[] args)
         {
-#if NET_CORE
+#if NETCOREAPP1_1
             var baseDirectory = AppContext.BaseDirectory;
 #endif
 
-#if !NET_CORE
+#if !NETCOREAPP1_1
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 #endif
 
-            var logCfg = new FileInfo(Path.Combine(baseDirectory, "log4net.config"));
-            var repo = LogManager.CreateRepository("default");
-            XmlConfigurator.ConfigureAndWatch(repo, logCfg);
+            #region app config
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(baseDirectory)
+                .AddJsonFile("appsettings.json", true, true);
+
+            Configuration = builder.Build();
+
+            #endregion
 
             Meituan.Run();
+            BoxOffice.Run();
         }
     }
 }

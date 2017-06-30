@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using DotnetSpider.Core;
-using log4net;
+using NLog;
 
 namespace MovieCollector
 {
     public class PageProcessorWithLog : DotnetSpider.Core.Processor.BasePageProcessor
     {
-        protected static ILog logger = LogManager.GetLogger("default", "default");
+        protected Logger logger = LogManager.GetCurrentClassLogger();
 
         protected override void Handle(Page page)
         {

@@ -27,8 +27,6 @@ namespace MovieCollector
                 .SetDownloader(new HttpClientDownloader())
                 .SetThreadNum(1);
 
-            spider.EmptySleepTime = 3000;
-
             spider.Run();
         }
     }
