@@ -36,18 +36,16 @@ namespace MovieCollector
         static void DeleteOldData()
         {
             var sql = @"
-            UPDATE movie.box_office a 
+            UPDATE movie.box_office a
+                    INNER JOIN
+                (SELECT 
+                    name, MIN(creation_time) AS mintime
+                FROM
+                    movie.box_office
+                GROUP BY name
+                HAVING COUNT(*) > 1) r ON a.name = r.name 
             SET 
-                creation_time = (SELECT 
-                        mintime
-                    FROM
-                        (SELECT 
-                            name, MIN(creation_time) AS mintime
-                        FROM
-                            movie.box_office
-                        GROUP BY name) r
-                    WHERE
-                        r.name = a.name);
+                a.creation_time = r.mintime;
 
 
             DELETE FROM movie.box_office 
