@@ -27,7 +27,7 @@ namespace MovieCollector
                 .SetDownloader(new HttpClientDownloader())
                 .SetThreadNum(1);
 
-            spider.EmptySleepTime = 60000;
+            spider.EmptySleepTime = 120000;
             spider.Run();
 
             DeleteOldData();
@@ -113,7 +113,7 @@ namespace MovieCollector
                 var price = item.Select(Selectors.XPath("./td[6]")).GetValue().HumanToNumber();
                 if (people.HasValue && price.HasValue)
                 {
-                    model.box_office = (int)(people.Value * price.Value);
+                    model.box_office = (long)(people.Value * price.Value);
                 }
 
                 results.Add(model);

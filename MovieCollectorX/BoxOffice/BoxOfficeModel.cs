@@ -21,7 +21,7 @@ namespace MovieCollector
         /// <summary>
         /// 票房(元)
         /// </summary>
-        public int box_office { get; set; } = 0;
+        public long box_office { get; set; } = 0;
 
         public string img_url { get; set; } = string.Empty;
 
