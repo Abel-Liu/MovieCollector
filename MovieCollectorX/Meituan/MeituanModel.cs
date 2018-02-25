@@ -24,5 +24,7 @@ namespace MovieCollector
         public DateTime creation_time { get; set; } = DateTime.UtcNow.AddHours(8);
 
         public DateTime update_time { get; set; } = DateTime.UtcNow.AddHours(8);
+
+        public int? seen { get; set; } = 0;
     }
 }

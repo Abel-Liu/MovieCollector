@@ -27,7 +27,7 @@ namespace MovieCollector
                 .SetDownloader(new HttpClientDownloader())
                 .SetThreadNum(1);
 
-            spider.EmptySleepTime = 120000;
+            spider.EmptySleepTime = 60000;
             spider.Run();
 
             DeleteOldData();
@@ -39,13 +39,13 @@ namespace MovieCollector
             UPDATE movie.box_office a
                     INNER JOIN
                 (SELECT 
-                    name, MIN(creation_time) AS mintime
+                    name, MIN(creation_time) AS mintime, max(seen) as seen
                 FROM
                     movie.box_office
                 GROUP BY name
                 HAVING COUNT(*) > 1) r ON a.name = r.name 
             SET 
-                a.creation_time = r.mintime;
+                a.creation_time = r.mintime, a.seen = r.seen;
 
 
             DELETE FROM movie.box_office 
